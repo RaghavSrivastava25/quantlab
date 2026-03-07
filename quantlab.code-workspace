@@ -1,0 +1,79 @@
+{
+  "folders": [
+    { "path": ".", "name": "QuantLab Root" },
+    { "path": "frontend", "name": "Frontend (Next.js)" },
+    { "path": "backend", "name": "Backend (FastAPI)" },
+    { "path": "sandbox", "name": "Sandbox (Docker)" }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": { "editor.defaultFormatter": "ms-python.python" },
+    "python.defaultInterpreterPath": "${workspaceFolder:Backend (FastAPI)}/venv/bin/python",
+    "python.analysis.extraPaths": ["${workspaceFolder:Backend (FastAPI)}"],
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "files.exclude": { "**/node_modules": true, "**/__pycache__": true, "**/.next": true, "**/venv": true },
+    "terminal.integrated.env.linux": { "PYTHONPATH": "${workspaceFolder:Backend (FastAPI)}" },
+    "terminal.integrated.env.osx": { "PYTHONPATH": "${workspaceFolder:Backend (FastAPI)}" }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "FastAPI Backend",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["api.main:app", "--reload", "--port", "8000"],
+        "cwd": "${workspaceFolder:Backend (FastAPI)}",
+        "envFile": "${workspaceFolder:Backend (FastAPI)}/.env"
+      },
+      {
+        "name": "Sandbox Server",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:Sandbox (Docker)}/runner/server.py",
+        "cwd": "${workspaceFolder:Sandbox (Docker)}"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start Infra (Docker)",
+        "type": "shell",
+        "command": "docker compose up -d",
+        "options": { "cwd": "${workspaceFolder:QuantLab Root}/infra" },
+        "group": "build"
+      },
+      {
+        "label": "Run Migrations",
+        "type": "shell",
+        "command": "cd backend && alembic upgrade head",
+        "options": { "cwd": "${workspaceFolder:QuantLab Root}" },
+        "group": "build"
+      },
+      {
+        "label": "Seed Problems",
+        "type": "shell",
+        "command": "cd backend && python -m data.seeds.seed_problems",
+        "options": { "cwd": "${workspaceFolder:QuantLab Root}" }
+      },
+      {
+        "label": "Seed Datasets",
+        "type": "shell",
+        "command": "cd backend && python -m data.seeds.seed_datasets",
+        "options": { "cwd": "${workspaceFolder:QuantLab Root}" }
+      },
+      {
+        "label": "Frontend Dev",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": { "cwd": "${workspaceFolder:Frontend (Next.js)}" },
+        "group": "build",
+        "isBackground": true
+      }
+    ]
+  }
+}

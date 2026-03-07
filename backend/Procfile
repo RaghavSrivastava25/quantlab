@@ -1,0 +1,1 @@
+web: alembic upgrade head && python -m data.seeds.seed_datasets && python -m data.seeds.seed_problems && python -m data.seeds.seed_research && uvicorn api.main:app --host 0.0.0.0 --port $PORT

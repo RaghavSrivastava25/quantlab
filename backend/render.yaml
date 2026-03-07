@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: quantlab-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantlab-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SANDBOX_URL
+        value: http://localhost:9000
+      - key: DATA_DIR
+        value: ./data/datasets
+
+databases:
+  - name: quantlab-db
+    databaseName: quantlab
+    user: quantlab

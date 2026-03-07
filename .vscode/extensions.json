@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "ms-vscode.vscode-typescript-next",
+    "eamodio.gitlens",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg"
+  ]
+}
