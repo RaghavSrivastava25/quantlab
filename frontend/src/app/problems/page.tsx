@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import api from "@/lib/api";
-import { CheckCircle2, Circle, ChevronRight } from "lucide-react";
+import { Circle, ChevronRight } from "lucide-react";
 import clsx from "clsx";
 
 interface Problem { id: number; slug: string; title: string; difficulty: "easy"|"medium"|"hard"; category: string; points: number; tags: string[] }
@@ -13,7 +13,7 @@ const DIFF_BG = { easy: "bg-brand-500/10 border-brand-500/20", medium: "bg-yello
 const CATEGORIES = ["all","statistics","options","futures","risk","probability","strategies","portfolio"];
 const CAT_COLORS: Record<string,string> = { statistics:"text-blue-400 bg-blue-400/10 border-blue-400/20", options:"text-purple-400 bg-purple-400/10 border-purple-400/20", futures:"text-yellow-400 bg-yellow-400/10 border-yellow-400/20", risk:"text-red-400 bg-red-400/10 border-red-400/20", probability:"text-green-400 bg-green-400/10 border-green-400/20", strategies:"text-orange-400 bg-orange-400/10 border-orange-400/20", portfolio:"text-cyan-400 bg-cyan-400/10 border-cyan-400/20" };
 
-export default function ProblemsPage() {
+function ProblemsContent() {
   const searchParams = useSearchParams();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,5 +82,13 @@ export default function ProblemsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProblemsPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-64 text-slate-500">Loading...</div>}>
+      <ProblemsContent />
+    </Suspense>
   );
 }
