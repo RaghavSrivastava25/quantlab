@@ -43,7 +43,6 @@ const PROBLEMS = [
   { slug:"stoch-ito-lemma",        title:"Itô's Lemma — Apply to GBM",     difficulty:"hard",   category:"stochastic",  points:200, tags:["ito","stochastic-calculus"] },
   { slug:"stoch-brownian-bridge",  title:"Brownian Bridge Simulation",     difficulty:"hard",   category:"stochastic",  points:175, tags:["brownian-bridge","simulation"] },
   { slug:"stoch-poisson-process",  title:"Poisson Process — Jump Times",   difficulty:"medium", category:"stochastic",  points:125, tags:["poisson","jump-process"] },
-  { slug:"brain-price-sequence",   title:"Random Walk — Never Touch Zero", difficulty:"hard",   category:"stochastic",  points:175, tags:["random-walk","reflection"] },
 
   // ── ALGORITHMS & NUMERICAL METHODS ────────────────────────────────────
   { slug:"algo-bisection",         title:"Bisection Method",               difficulty:"easy",   category:"algorithms",  points:75,  tags:["numerical","root-finding"] },

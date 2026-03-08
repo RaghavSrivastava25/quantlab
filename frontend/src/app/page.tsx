@@ -7,14 +7,15 @@ import { ArrowRight, Zap, Code2, BookOpen, BarChart2 } from "lucide-react";
 const SpacetimeGrid = dynamic(() => import("@/components/ui/SpacetimeGrid"), { ssr: false });
 
 const CATEGORIES = [
-  { key: "statistics",  label: "Statistics",   color: "#3b82f6", desc: "SMA, EMA, Z-Score, Sharpe, Beta" },
-  { key: "options",     label: "Options",       color: "#8b5cf6", desc: "Black-Scholes, Greeks, Implied Vol" },
-  { key: "futures",     label: "Futures",       color: "#f59e0b", desc: "Fair Value, Basis, Roll Yield" },
-  { key: "risk",        label: "Risk",          color: "#ef4444", desc: "VaR, CVaR, Sortino, Drawdown" },
-  { key: "probability", label: "Probability",   color: "#10b981", desc: "Monte Carlo, GBM, Kelly, Bayes" },
-  { key: "strategies",  label: "Strategies",    color: "#f97316", desc: "Pairs Trading, Momentum, MACD" },
-  { key: "portfolio",   label: "Portfolio",     color: "#06b6d4", desc: "Markowitz, CAPM, Risk Parity" },
-  { key: "brain",       label: "Brain Teasers", color: "#ec4899", desc: "PuzzledQuant, Brainstellar, Greenbook" },
+  { key: "brain",       label: "Brain Teasers",          color: "#ec4899", desc: "12 problems — Monty Hall, Kelly, Game Theory, Paradoxes" },
+  { key: "probability", label: "Probability",            color: "#10b981", desc: "7 problems — Bayes, Monte Carlo, Distributions" },
+  { key: "stochastic",  label: "Stochastic Processes",   color: "#8b5cf6", desc: "5 problems — GBM, Itô's Lemma, OU Process" },
+  { key: "calculus",    label: "Calculus & Linear Algebra", color: "#3b82f6", desc: "6 problems — Gradient Descent, Eigenvalues, PCA" },
+  { key: "algorithms",  label: "Algorithms & Numerical", color: "#f97316", desc: "6 problems — Bisection, Dynamic Programming, Kalman" },
+  { key: "finance",     label: "Finance",                color: "#06b6d4", desc: "10 problems — Sharpe, Drawdown, MACD, Momentum" },
+  { key: "options",     label: "Options & Futures",      color: "#f59e0b", desc: "6 problems — Black-Scholes, Greeks, Roll Yield" },
+  { key: "portfolio",   label: "Portfolio & Risk",       color: "#ef4444", desc: "5 problems — VaR, CVaR, Markowitz, Rebalancing" },
+  { key: "statistics",  label: "Statistics",             color: "#64748b", desc: "6 problems — OLS, Bootstrap, ACF, Hurst Exponent" },
 ];
 
 export default function Home() {
@@ -53,7 +54,7 @@ export default function Home() {
 
         <section className="border-y border-slate-800/60 bg-slate-900/40 backdrop-blur-sm">
           <div className="max-w-3xl mx-auto px-6 py-6 grid grid-cols-3 gap-6">
-            {[["35+","Problems"],["8","Categories"],["7","Research Modules"]].map(([v,l]) => (
+            {[["63","Problems"],["9","Categories"],["3","Problem Types"]].map(([v,l]) => (
               <div key={l} className="text-center">
                 <div className="text-2xl font-black text-brand-400 font-mono">{v}</div>
                 <div className="text-xs text-slate-500 mt-0.5">{l}</div>
