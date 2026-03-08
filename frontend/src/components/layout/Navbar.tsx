@@ -4,11 +4,6 @@ import { usePathname } from "next/navigation";
 import { TrendingUp } from "lucide-react";
 import clsx from "clsx";
 
-const NAV = [
-  { href: "/problems",  label: "Problems" },
-  { href: "/research",  label: "Research" },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
   return (
@@ -20,17 +15,13 @@ export default function Navbar() {
           </div>
           <span className="font-black text-slate-100 text-lg tracking-tight">QuantLab</span>
         </Link>
-        <div className="flex items-center gap-1">
-          {NAV.map(({ href, label }) => (
-            <Link key={href} href={href}
-              className={clsx("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                pathname.startsWith(href)
-                  ? "text-brand-400 bg-brand-500/10"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
-              {label}
-            </Link>
-          ))}
-        </div>
+        <Link href="/problems"
+          className={clsx("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+            pathname.startsWith("/problems")
+              ? "text-brand-400 bg-brand-500/10"
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
+          Problems
+        </Link>
       </div>
     </nav>
   );
