@@ -4,6 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Play, CheckCircle2, XCircle, Loader2, RotateCcw } from "lucide-react";
 import clsx from "clsx";
 
+declare global { interface Window { loadPyodide?: any; pyodide?: any } }
+
 // ─── PROBLEM DEFINITIONS ────────────────────────────────────────────────────
 // type: "code" | "mcq" | "value"
 const PROBLEM_DATA: Record<string, any> = {
@@ -1377,7 +1379,6 @@ A pairs trading strategy would work best on a spread with:`,
 };
 
 // ─── PYODIDE RUNNER ──────────────────────────────────────────────────────────
-declare global { interface Window { loadPyodide?: any; pyodide?: any } }
 
 async function getPyodide() {
   if (window.pyodide) return window.pyodide;
