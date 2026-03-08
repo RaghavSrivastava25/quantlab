@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuth";
-import { TrendingUp, LogOut, User, BarChart2, BookOpen, Trophy, ChevronDown } from "lucide-react";
+import { TrendingUp, LogOut, User, BarChart2, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 
@@ -16,19 +16,20 @@ const NAV = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, setUser } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const handleLogout = () => {
+    logout();
     setOpen(false);
     router.push("/");
   };
@@ -36,7 +37,6 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-slate-800/60 bg-dark-900/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <div className="w-7 h-7 bg-brand-500 rounded-lg flex items-center justify-center">
             <TrendingUp size={14} className="text-dark-900" strokeWidth={2.5} />
@@ -44,18 +44,18 @@ export default function Navbar() {
           <span className="font-black text-slate-100 text-lg tracking-tight">QuantLab</span>
         </Link>
 
-        {/* Nav links */}
         <div className="hidden md:flex items-center gap-1">
           {NAV.map(({ href, label }) => (
             <Link key={href} href={href}
               className={clsx("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                pathname.startsWith(href) ? "text-brand-400 bg-brand-500/10" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
+                pathname.startsWith(href)
+                  ? "text-brand-400 bg-brand-500/10"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
               {label}
             </Link>
           ))}
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-2">
           {user ? (
             <div className="relative" ref={ref}>
@@ -81,7 +81,7 @@ export default function Navbar() {
                     className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors w-full">
                     <BarChart2 size={14} /> Dashboard
                   </Link>
-                  <button onClick={logout}
+                  <button onClick={handleLogout}
                     className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-red-400 hover:bg-slate-800 transition-colors w-full border-t border-slate-800">
                     <LogOut size={14} /> Sign Out
                   </button>
@@ -90,10 +90,12 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/auth/login" className="text-sm text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors font-medium">
+              <Link href="/auth/login"
+                className="text-sm text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors font-medium">
                 Sign In
               </Link>
-              <Link href="/auth/register" className="text-sm font-bold bg-brand-500 hover:bg-brand-400 text-dark-900 px-3.5 py-1.5 rounded-lg transition-colors">
+              <Link href="/auth/register"
+                className="text-sm font-bold bg-brand-500 hover:bg-brand-400 text-dark-900 px-3.5 py-1.5 rounded-lg transition-colors">
                 Sign Up Free
               </Link>
             </>

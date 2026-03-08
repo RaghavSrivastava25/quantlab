@@ -2,13 +2,9 @@ services:
   - type: web
     name: quantlab-api
     env: python
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    buildCommand: pip install --upgrade pip && pip install --only-binary=pandas,numpy,pyarrow -r requirements.txt
     startCommand: alembic upgrade head && python -m data.seeds.seed_datasets && python -m data.seeds.seed_problems && python -m data.seeds.seed_research && uvicorn api.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: quantlab-db
-          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: DATA_DIR
@@ -17,8 +13,3 @@ services:
         value: http://localhost:9000
       - key: PYTHON_VERSION
         value: "3.11.9"
-
-databases:
-  - name: quantlab-db
-    databaseName: quantlab
-    user: quantlab

@@ -2,13 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import api from "@/lib/api";
 import { useAuthStore } from "@/hooks/useAuth";
 import { Loader2, UserPlus } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setUser } = useAuthStore();
+  const { register } = useAuthStore();
   const [form, setForm] = useState({ username: "", email: "", password: "", confirm: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,17 +20,7 @@ export default function RegisterPage() {
     if (form.username.length < 3) { setError("Username must be at least 3 characters"); return; }
     setLoading(true);
     try {
-      await api.post("/auth/register", { username: form.username, email: form.email, password: form.password });
-      // Auto login
-      const params = new URLSearchParams();
-      params.append("username", form.email);
-      params.append("password", form.password);
-      const res = await api.post("/auth/token", params, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      });
-      localStorage.setItem("token", res.data.access_token);
-      const me = await api.get("/auth/me");
-      setUser(me.data);
+      await register(form.email, form.username, form.password);
       router.push("/dashboard");
     } catch (e: any) {
       setError(e.response?.data?.detail || "Registration failed — username or email may already exist");
@@ -48,26 +37,30 @@ export default function RegisterPage() {
         <form onSubmit={submit} className="bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-4">
           {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>}
           <div>
-            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Username <span className="text-slate-600">(unique, shown on leaderboard)</span></label>
-            <input type="text" required value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Username <span className="text-slate-600">(shown on leaderboard)</span></label>
+            <input type="text" required value={form.username}
+              onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="quantmaster42" />
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5 font-medium">Email</label>
-            <input type="email" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+            <input type="email" required value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="you@example.com" />
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5 font-medium">Password <span className="text-slate-600">(min 8 chars)</span></label>
-            <input type="password" required value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+            <input type="password" required value={form.password}
+              onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="••••••••" />
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5 font-medium">Confirm Password</label>
-            <input type="password" required value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
+            <input type="password" required value={form.confirm}
+              onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="••••••••" />
           </div>

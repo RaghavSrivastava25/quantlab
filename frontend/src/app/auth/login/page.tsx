@@ -2,13 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import api from "@/lib/api";
 import { useAuthStore } from "@/hooks/useAuth";
 import { Loader2, LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser } = useAuthStore();
+  const { login } = useAuthStore();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,15 +16,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true); setError("");
     try {
-      const params = new URLSearchParams();
-      params.append("username", form.email);
-      params.append("password", form.password);
-      const res = await api.post("/auth/token", params, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      });
-      localStorage.setItem("token", res.data.access_token);
-      const me = await api.get("/auth/me");
-      setUser(me.data);
+      await login(form.email, form.password);
       router.push("/dashboard");
     } catch (e: any) {
       setError(e.response?.data?.detail || "Invalid email or password");
@@ -43,13 +34,15 @@ export default function LoginPage() {
           {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>}
           <div>
             <label className="block text-xs text-slate-400 mb-1.5 font-medium">Email</label>
-            <input type="email" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+            <input type="email" required value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="you@example.com" />
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5 font-medium">Password</label>
-            <input type="password" required value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+            <input type="password" required value={form.password}
+              onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
               placeholder="••••••••" />
           </div>
