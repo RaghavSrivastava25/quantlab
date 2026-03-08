@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Play, CheckCircle2, XCircle, Loader2, RotateCcw } from "lucide-react";
 import clsx from "clsx";
 
-declare global { interface Window { loadPyodide?: any; pyodide?: any } }
 
 // ─── PROBLEM DEFINITIONS ────────────────────────────────────────────────────
 // type: "code" | "mcq" | "value"
@@ -1381,8 +1380,8 @@ A pairs trading strategy would work best on a spread with:`,
 // ─── PYODIDE RUNNER ──────────────────────────────────────────────────────────
 
 async function getPyodide() {
-  if (window.pyodide) return window.pyodide;
-  if (!window.loadPyodide) {
+  if ((window as any).pyodide) return (window as any).pyodide;
+  if (!(window as any).loadPyodide) {
     await new Promise<void>((res, rej) => {
       const s = document.createElement("script");
       s.src = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js";
@@ -1390,8 +1389,8 @@ async function getPyodide() {
       document.head.appendChild(s);
     });
   }
-  window.pyodide = await window.loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
-  return window.pyodide;
+  (window as any).pyodide = await (window as any).loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
+  return (window as any).pyodide;
 }
 
 // ─── PROBLEM PAGE ────────────────────────────────────────────────────────────
