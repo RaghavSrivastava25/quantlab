@@ -2,14 +2,28 @@ services:
   - type: web
     name: quantlab-api
     env: python
-    buildCommand: pip install --upgrade pip && pip install --only-binary=pandas,numpy,pyarrow -r requirements.txt
-    startCommand: alembic upgrade head && python -m data.seeds.seed_datasets && python -m data.seeds.seed_problems && python -m data.seeds.seed_research && uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: alembic upgrade head && python -c "
+import asyncio
+from db.database import engine
+from sqlalchemy import text
+
+async def fix():
+    async with engine.begin() as conn:
+        await conn.execute(text('ALTER TABLE research_modules ADD COLUMN IF NOT EXISTS papers JSONB DEFAULT \'[]\''))
+        await conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS current_streak INTEGER DEFAULT 0'))
+        await conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS max_streak INTEGER DEFAULT 0'))
+        await conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_date DATE'))
+        await conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS badges JSONB DEFAULT \'[]\''))
+        print('Schema patched OK')
+asyncio.run(fix())
+" && python -m data.seeds.seed_datasets && python -m data.seeds.seed_problems && python -m data.seeds.seed_research && uvicorn api.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
       - key: SECRET_KEY
         generateValue: true
       - key: DATA_DIR
         value: ./data/datasets
       - key: SANDBOX_URL
         value: http://localhost:9000
-      - key: PYTHON_VERSION
-        value: "3.11.9"
