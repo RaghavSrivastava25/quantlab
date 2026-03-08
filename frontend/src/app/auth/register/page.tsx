@@ -1,69 +1,86 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 import { useAuthStore } from "@/hooks/useAuth";
-import { TrendingUp } from "lucide-react";
-import toast from "react-hot-toast";
+import { Loader2, UserPlus } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register } = useAuthStore();
-  const [form, setForm] = useState({ email: "", username: "", password: "", full_name: "" });
+  const { setUser } = useAuthStore();
+  const [form, setForm] = useState({ username: "", email: "", password: "", confirm: "" });
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const update = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [k]: e.target.value });
-
-  const handleSubmit = async () => {
-    if (!form.email || !form.username || !form.password) { toast.error("Fill in all required fields"); return; }
-    if (form.password.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (form.password !== form.confirm) { setError("Passwords don't match"); return; }
+    if (form.password.length < 8) { setError("Password must be at least 8 characters"); return; }
+    if (form.username.length < 3) { setError("Username must be at least 3 characters"); return; }
     setLoading(true);
     try {
-      await register(form.email, form.username, form.password, form.full_name || undefined);
-      toast.success("Account created!");
-      router.push("/problems");
+      await api.post("/auth/register", { username: form.username, email: form.email, password: form.password });
+      // Auto login
+      const params = new URLSearchParams();
+      params.append("username", form.email);
+      params.append("password", form.password);
+      const res = await api.post("/auth/token", params, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      });
+      localStorage.setItem("token", res.data.access_token);
+      const me = await api.get("/auth/me");
+      setUser(me.data);
+      router.push("/dashboard");
     } catch (e: any) {
-      toast.error(e.response?.data?.detail || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
+      setError(e.response?.data?.detail || "Registration failed — username or email may already exist");
+    } finally { setLoading(false); }
   };
 
-  const fields = [
-    { key: "email", label: "Email *", type: "email", placeholder: "you@example.com" },
-    { key: "username", label: "Username *", type: "text", placeholder: "quantwizard" },
-    { key: "full_name", label: "Full Name", type: "text", placeholder: "Optional" },
-    { key: "password", label: "Password *", type: "password", placeholder: "Min 8 characters" },
-  ];
-
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <TrendingUp size={32} className="text-brand-500 mx-auto mb-3" />
-          <h1 className="text-2xl font-bold text-slate-100">Join QuantLab</h1>
-          <p className="text-slate-400 text-sm mt-1">Free forever. No credit card required.</p>
+          <h1 className="text-3xl font-black text-slate-100 mb-2">Create your account</h1>
+          <p className="text-slate-400">Free forever. No credit card needed.</p>
         </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-          {fields.map(({ key, label, type, placeholder }) => (
-            <div key={key}>
-              <label className="text-xs text-slate-400 block mb-1.5">{label}</label>
-              <input type={type} value={(form as any)[key]} onChange={update(key)} onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                placeholder={placeholder}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500 transition-colors" />
-            </div>
-          ))}
-          <button onClick={handleSubmit} disabled={loading}
-            className="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-50 text-sm">
+        <form onSubmit={submit} className="bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-4">
+          {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>}
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Username <span className="text-slate-600">(unique, shown on leaderboard)</span></label>
+            <input type="text" required value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
+              placeholder="quantmaster42" />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Email</label>
+            <input type="email" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
+              placeholder="you@example.com" />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Password <span className="text-slate-600">(min 8 chars)</span></label>
+            <input type="password" required value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
+              placeholder="••••••••" />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5 font-medium">Confirm Password</label>
+            <input type="password" required value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-brand-500 transition-colors"
+              placeholder="••••••••" />
+          </div>
+          <button type="submit" disabled={loading}
+            className="w-full flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-400 disabled:opacity-50 text-dark-900 font-bold py-3 rounded-xl transition-all">
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
             {loading ? "Creating account..." : "Create Account"}
           </button>
-        </div>
-
-        <p className="text-center text-sm text-slate-500 mt-4">
-          Already have an account?{" "}
-          <Link href="/auth/login" className="text-brand-500 hover:underline">Sign in</Link>
-        </p>
+          <p className="text-center text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link href="/auth/login" className="text-brand-400 hover:text-brand-300 font-medium">Sign in</Link>
+          </p>
+        </form>
       </div>
     </div>
   );
