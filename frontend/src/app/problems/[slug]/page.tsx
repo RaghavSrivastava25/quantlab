@@ -1448,7 +1448,7 @@ export default function ProblemPage() {
       setOutput(out);
       setStatus(out.includes("❌") ? "fail" : "pass");
     } catch (e: any) {
-      py.runPython("sys.stdout = sys.__stdout__");
+      try { const py2 = await getPyodide(); py2.runPython("sys.stdout = sys.__stdout__"); } catch {}
       setOutput("❌ Error:\n" + String(e.message || e));
       setStatus("fail");
     }
