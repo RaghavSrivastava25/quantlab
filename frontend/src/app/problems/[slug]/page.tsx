@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Play, CheckCircle2, XCircle, Loader2, RotateCcw } from "lucide-react";
+import { ChevronLeft, CheckCircle2, XCircle } from "lucide-react";
 import clsx from "clsx";
 
 
@@ -191,104 +191,32 @@ Enter as a decimal (e.g. 1.0625).`,
   "normal-distribution-pdf": {
     title: "Normal Distribution PDF",
     difficulty: "easy", category: "Probability", points: 50,
-    type: "code",
-    description: `Implement the **Normal Distribution Probability Density Function (PDF)**.
-
-The PDF of a normal distribution is:
-
-$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$
-
-Your function should take **x**, **mean (μ)**, and **std (σ)** as inputs.`,
-    starterCode: `import math
-
-def normal_pdf(x: float, mu: float, sigma: float) -> float:
-    """
-    Compute the Normal Distribution PDF.
-    
-    Args:
-        x: value to evaluate at
-        mu: mean of the distribution
-        sigma: standard deviation
-    
-    Returns:
-        PDF value at x
-    """
-    # Your code here
-    pass
-
-# Test it
-print(normal_pdf(0, 0, 1))   # Should be ≈ 0.3989
-print(normal_pdf(1, 0, 1))   # Should be ≈ 0.2420
-`,
-    testCode: `
-import math
-
-def normal_pdf(x, mu, sigma):
-    return (1 / (sigma * math.sqrt(2 * math.pi))) * math.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
-
-tests = [
-    (normal_pdf(0, 0, 1), 0.3989, "PDF at x=0, standard normal"),
-    (normal_pdf(1, 0, 1), 0.2420, "PDF at x=1, standard normal"),
-    (normal_pdf(0, 0, 2), 0.1995, "PDF at x=0, sigma=2"),
-    (normal_pdf(-1, 0, 1), 0.2420, "PDF at x=-1, symmetric"),
-]
-passed = 0
-for got, expected, name in tests:
-    ok = abs(got - expected) < 0.001
-    print(f"{'✅' if ok else '❌'} {name}: {got:.4f} (expected {expected:.4f})")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "The PDF formula is f(x) = (1/(σ√(2π))) × exp(-(x-μ)²/(2σ²)). Use math.pi and math.exp from Python's standard library.",
+    type: "mcq",
+    description: `Which function correctly computes the **Normal Distribution PDF** f(x) for mean μ and std σ?`,
+    options: [
+      "return (1/(sigma*(2*3.14159)**0.5)) * 2.718**(-(x-mu)**2/(2*sigma**2))",
+      "import math\nreturn (1/(sigma*math.sqrt(2*math.pi))) * math.exp(-((x-mu)**2)/(2*sigma**2))",
+      "import math\nreturn math.exp(-((x-mu)**2)/(2*sigma**2))",
+      "import math\nreturn (1/math.sqrt(2*math.pi)) * math.exp(-x**2/2)",
+    ],
+    answer: "import math\nreturn (1/(sigma*math.sqrt(2*math.pi))) * math.exp(-((x-mu)**2)/(2*sigma**2))",
+    explanation: "Option A uses bad approximations for π and e. Option C omits the 1/(σ√2π) normalising constant. Option D is the standard normal only (μ=0, σ=1 hardcoded). Only B is the full general formula.",
   },
   "monte-carlo-pi": {
     title: "Monte Carlo — Estimate π",
     difficulty: "easy", category: "Probability", points: 75,
-    type: "code",
-    description: `Use **Monte Carlo simulation** to estimate **π**.
+    type: "mcq",
+    description: `Generate random (x, y) in [0,1]². Count points inside the quarter-circle x²+y²≤1. Multiply fraction by 4 to estimate π.
 
-**Method**: Generate random (x, y) points in the unit square [0,1]×[0,1]. Count how many fall inside the quarter circle of radius 1. The ratio × 4 approximates π.
-
-$$\\pi \\approx 4 \\times \\frac{\\text{points inside circle}}{\\text{total points}}$$`,
-    starterCode: `import random
-
-def estimate_pi(n_samples: int, seed: int = 42) -> float:
-    """
-    Estimate pi using Monte Carlo simulation.
-    
-    Args:
-        n_samples: number of random points
-        seed: random seed for reproducibility
-    
-    Returns:
-        estimate of pi
-    """
-    random.seed(seed)
-    # Your code here
-    pass
-
-print(estimate_pi(10000))   # Should be close to 3.14159
-print(estimate_pi(100000))  # Should be closer
-`,
-    testCode: `
-import random
-
-def estimate_pi(n_samples, seed=42):
-    random.seed(seed)
-    inside = sum(1 for _ in range(n_samples) if random.random()**2 + random.random()**2 <= 1)
-    return 4 * inside / n_samples
-
-tests = [
-    (abs(estimate_pi(10000) - 3.14159) < 0.1, "10k samples within 0.1 of pi"),
-    (abs(estimate_pi(100000) - 3.14159) < 0.05, "100k samples within 0.05 of pi"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Count points where x² + y² ≤ 1. The fraction of points inside the quarter circle equals π/4.",
+Which implementation is correct?`,
+    options: [
+      "inside = sum(1 for _ in range(n) if x**2 + y**2 <= 1)\nreturn 4 * inside / n",
+      "inside = sum(1 for _ in range(n) if random.random()**2 + random.random()**2 <= 1)\nreturn 4 * inside / n",
+      "inside = sum(1 for _ in range(n) if random.random()**2 + random.random()**2 <= 1)\nreturn 2 * inside / n",
+      "inside = sum(1 for _ in range(n) if random.random() + random.random() <= 1)\nreturn 4 * inside / n",
+    ],
+    answer: "inside = sum(1 for _ in range(n) if random.random()**2 + random.random()**2 <= 1)\nreturn 4 * inside / n",
+    explanation: "Option A reuses the same x,y (not re-randomised each iteration). Option C multiplies by 2 not 4. Option D checks x+y≤1 (a triangle), not the circle condition x²+y²≤1.",
   },
   "prob-bayes-disease": {
     title: "Bayes Theorem — Disease Testing",
@@ -356,67 +284,18 @@ The z-score = (60 - 50) / 5 = **2.0**.
   "stoch-gbm-simulation": {
     title: "Geometric Brownian Motion",
     difficulty: "medium", category: "Stochastic Processes", points: 150,
-    type: "code",
-    description: `Simulate a **Geometric Brownian Motion (GBM)** path — the standard model for stock prices.
+    type: "mcq",
+    description: `GBM discretisation: **S_{t+1} = S_t × exp((μ - σ²/2)Δt + σ√Δt × Z)** where Z ~ N(0,1).
 
-The GBM formula (discrete-time):
-
-$$S_{t+1} = S_t \\cdot e^{(\\mu - \\frac{\\sigma^2}{2})\\Delta t + \\sigma\\sqrt{\\Delta t}\\, Z}$$
-
-where Z ~ N(0,1).`,
-    starterCode: `import math
-import random
-
-def simulate_gbm(S0: float, mu: float, sigma: float, T: float, n_steps: int, seed: int = 42) -> list:
-    """
-    Simulate a GBM path.
-    
-    Args:
-        S0: initial price
-        mu: drift (annualized)
-        sigma: volatility (annualized)
-        T: time horizon in years
-        n_steps: number of time steps
-        seed: random seed
-    
-    Returns:
-        list of prices (length n_steps + 1)
-    """
-    random.seed(seed)
-    dt = T / n_steps
-    prices = [S0]
-    # Your code here
-    pass
-
-path = simulate_gbm(100, 0.05, 0.2, 1.0, 252)
-print(f"Start: {path[0]:.2f}, End: {path[-1]:.2f}, Steps: {len(path)}")
-`,
-    testCode: `
-import math, random
-
-def simulate_gbm(S0, mu, sigma, T, n_steps, seed=42):
-    random.seed(seed)
-    dt = T / n_steps
-    prices = [S0]
-    for _ in range(n_steps):
-        z = random.gauss(0, 1)
-        prices.append(prices[-1] * math.exp((mu - 0.5*sigma**2)*dt + sigma*math.sqrt(dt)*z))
-    return prices
-
-path = simulate_gbm(100, 0.05, 0.2, 1.0, 252)
-tests = [
-    (len(path) == 253, "Path has 253 points (252 steps + start)"),
-    (path[0] == 100, "Starts at S0=100"),
-    (all(p > 0 for p in path), "All prices positive (GBM stays positive)"),
-    (abs(path[-1] - 107.97) < 5.0, f"Final price ≈ 107.97 (got {path[-1]:.2f})"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Use the Euler-Maruyama discretization. At each step: S[t+1] = S[t] * exp((μ - σ²/2)Δt + σ√Δt * Z) where Z is a standard normal.",
+Which single-step update is correct?`,
+    options: [
+      "S_next = S * math.exp(mu * dt + sigma * math.sqrt(dt) * Z)",
+      "S_next = S * (1 + mu*dt + sigma*math.sqrt(dt)*Z)",
+      "S_next = S * math.exp((mu - 0.5*sigma**2)*dt + sigma*math.sqrt(dt)*Z)",
+      "S_next = S * math.exp((mu + 0.5*sigma**2)*dt + sigma*math.sqrt(dt)*Z)",
+    ],
+    answer: "S_next = S * math.exp((mu - 0.5*sigma**2)*dt + sigma*math.sqrt(dt)*Z)",
+    explanation: "The Itô correction term -σ²/2 is required by Itô's Lemma. Option A omits it. Option B is arithmetic Brownian motion, not geometric. Option D uses +σ²/2 which gives the wrong drift.",
   },
   "stoch-poisson-process": {
     title: "Poisson Process — Jump Times",
@@ -474,102 +353,34 @@ If θ = 0, what does the OU process reduce to?`,
   "calc-gradient-descent": {
     title: "Gradient Descent",
     difficulty: "easy", category: "Calculus & Linear Algebra", points: 75,
-    type: "code",
-    description: `Implement **gradient descent** to minimize the function:
+    type: "mcq",
+    description: `To minimise **f(x) = x² + 4x + 4**, the gradient is **f'(x) = 2x + 4**.
 
-$$f(x) = x^2 + 4x + 4 = (x+2)^2$$
-
-The gradient is **f'(x) = 2x + 4**. The minimum is at **x = -2**.
-
-Update rule: **x = x - α × f'(x)**`,
-    starterCode: `def gradient_descent(x0: float, learning_rate: float, n_iter: int) -> float:
-    """
-    Minimize f(x) = x^2 + 4x + 4 using gradient descent.
-    
-    Args:
-        x0: starting point
-        learning_rate: step size (alpha)
-        n_iter: number of iterations
-    
-    Returns:
-        x value at minimum
-    """
-    x = x0
-    # Your code here
-    pass
-
-result = gradient_descent(10.0, 0.1, 100)
-print(f"Minimum at x = {result:.4f}")  # Should be close to -2.0
-`,
-    testCode: `
-def gradient_descent(x0, learning_rate, n_iter):
-    x = x0
-    for _ in range(n_iter):
-        grad = 2*x + 4
-        x = x - learning_rate * grad
-    return x
-
-tests = [
-    (abs(gradient_descent(10.0, 0.1, 100) - (-2.0)) < 0.001, "Converges to -2.0 from x=10"),
-    (abs(gradient_descent(-10.0, 0.1, 100) - (-2.0)) < 0.001, "Converges to -2.0 from x=-10"),
-    (abs(gradient_descent(0.0, 0.01, 1000) - (-2.0)) < 0.01, "Converges with small learning rate"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "At each step compute the gradient f'(x) = 2x + 4, then update x = x - α×gradient. Repeat for n_iter steps.",
+Which update rule correctly performs gradient descent?`,
+    options: [
+      "x = x + lr * (2*x + 4)",
+      "x = x - lr * (2*x + 4)",
+      "x = x - lr * (x**2 + 4*x + 4)",
+      "x = x - (2*x + 4) / lr",
+    ],
+    answer: "x = x - lr * (2*x + 4)",
+    explanation: "Gradient descent: x = x - α×∇f(x). Option A adds the gradient (ascent not descent). Option C subtracts the function value, not the gradient. Option D divides by lr instead of multiplying.",
   },
   "calc-newton-raphson": {
     title: "Newton-Raphson Root Finding",
     difficulty: "easy", category: "Calculus & Linear Algebra", points: 75,
-    type: "code",
-    description: `Implement the **Newton-Raphson method** to find the square root of a number (i.e., solve x² - n = 0).
+    type: "mcq",
+    description: `Newton-Raphson: **x = x - f(x)/f'(x)**
 
-Update rule: **x_{k+1} = x_k - f(x_k)/f'(x_k) = x_k - (x_k² - n)/(2x_k) = (x_k + n/x_k)/2**`,
-    starterCode: `def newton_sqrt(n: float, tol: float = 1e-10) -> float:
-    """
-    Compute sqrt(n) using Newton-Raphson.
-    
-    Args:
-        n: number to find square root of
-        tol: convergence tolerance
-    
-    Returns:
-        sqrt(n)
-    """
-    x = n / 2.0  # initial guess
-    # Your code here
-    pass
-
-print(newton_sqrt(2))    # Should be ≈ 1.41421356
-print(newton_sqrt(144))  # Should be 12.0
-`,
-    testCode: `
-import math
-
-def newton_sqrt(n, tol=1e-10):
-    x = n / 2.0
-    while True:
-        x_new = (x + n/x) / 2
-        if abs(x_new - x) < tol:
-            return x_new
-        x = x_new
-
-tests = [
-    (abs(newton_sqrt(2) - math.sqrt(2)) < 1e-8, "sqrt(2) correct"),
-    (abs(newton_sqrt(144) - 12.0) < 1e-8, "sqrt(144) = 12"),
-    (abs(newton_sqrt(0.25) - 0.5) < 1e-8, "sqrt(0.25) = 0.5"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Iterate x = (x + n/x)/2 until |x_new - x| < tolerance. This is the Babylonian method and converges quadratically.",
+To compute √n (solve f(x) = x² - n = 0, f'(x) = 2x), which update is correct?`,
+    options: [
+      "x = x - (x**2 - n) / x",
+      "x = x - (x**2 - n) / (2*x)",
+      "x = x - 2*x / (x**2 - n)",
+      "x = (x + n) / 2",
+    ],
+    answer: "x = x - (x**2 - n) / (2*x)",
+    explanation: "f(x)=x²-n, f'(x)=2x → update: x - (x²-n)/(2x) = (x + n/x)/2. Option A divides by x not 2x. Option C inverts numerator/denominator. Option D is a cruder approximation that doesn't converge quadratically.",
   },
   "calc-matrix-inverse": {
     title: "Matrix Inverse Check",
@@ -611,302 +422,92 @@ Enter the larger eigenvalue as a number.`,
   "algo-bisection": {
     title: "Bisection Method",
     difficulty: "easy", category: "Algorithms & Numerical", points: 75,
-    type: "code",
-    description: `Implement the **bisection method** to find a root of a continuous function on interval [a, b].
-
-The algorithm:
-1. Compute midpoint m = (a+b)/2
-2. If f(m) ≈ 0 or interval is small enough, return m
-3. If f(a) and f(m) have the same sign, root is in [m, b]
-4. Otherwise root is in [a, m]`,
-    starterCode: `def bisection(f, a: float, b: float, tol: float = 1e-8) -> float:
-    """
-    Find root of f in [a, b] using bisection.
-    
-    Args:
-        f: continuous function
-        a, b: interval endpoints (f(a) and f(b) must have opposite signs)
-        tol: tolerance
-    
-    Returns:
-        approximate root
-    """
-    # Your code here
-    pass
-
-# Find root of x^3 - x - 2 = 0
-f = lambda x: x**3 - x - 2
-root = bisection(f, 1, 2)
-print(f"Root: {root:.8f}")  # Should be ≈ 1.52137971
-`,
-    testCode: `
-def bisection(f, a, b, tol=1e-8):
-    while (b - a) / 2 > tol:
-        m = (a + b) / 2
-        if f(m) == 0: return m
-        elif f(a) * f(m) < 0: b = m
-        else: a = m
-    return (a + b) / 2
-
-tests = [
-    (abs(bisection(lambda x: x**3 - x - 2, 1, 2) - 1.52137971) < 1e-6, "Root of x³-x-2 ≈ 1.5214"),
-    (abs(bisection(lambda x: x**2 - 4, 0, 3) - 2.0) < 1e-6, "Root of x²-4 = 2.0"),
-    (abs(bisection(lambda x: x - 1.5, 0, 3) - 1.5) < 1e-6, "Root of x-1.5 = 1.5"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "At each step narrow the interval by half. The key is checking which sub-interval contains the sign change: if f(a)×f(m) < 0, root is in [a,m], otherwise in [m,b].",
+    type: "mcq",
+    description: `Bisection narrows a root in [a, b]. At midpoint m = (a+b)/2, which interval update is correct?`,
+    options: [
+      "if f(a)*f(m) > 0: b = m\nelse: a = m",
+      "if f(m) > 0: b = m\nelse: a = m",
+      "if f(a)*f(m) < 0: b = m\nelse: a = m",
+      "if f(a)*f(m) > 0: a = m\nelse: b = m",
+    ],
+    answer: "if f(a)*f(m) > 0: a = m\nelse: b = m",
+    explanation: "If f(a) and f(m) have the same sign, the root is in [m,b] so a=m. If opposite signs, root is in [a,m] so b=m. Options A and C assign a=m and b=m backwards. Option B ignores f(a) entirely.",
   },
   "algo-binary-search": {
     title: "Binary Search",
     difficulty: "easy", category: "Algorithms & Numerical", points: 50,
-    type: "code",
-    description: `Implement **binary search** on a sorted array. Return the **index** of the target, or **-1** if not found.`,
-    starterCode: `def binary_search(arr: list, target: int) -> int:
-    """
-    Find target in sorted array using binary search.
-    
-    Returns:
-        index of target, or -1 if not found
-    """
-    left, right = 0, len(arr) - 1
-    # Your code here
-    pass
-
-arr = [1, 3, 5, 7, 9, 11, 13, 15]
-print(binary_search(arr, 7))   # Should be 3
-print(binary_search(arr, 6))   # Should be -1
-`,
-    testCode: `
-def binary_search(arr, target):
-    left, right = 0, len(arr) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        if arr[mid] == target: return mid
-        elif arr[mid] < target: left = mid + 1
-        else: right = mid - 1
-    return -1
-
-arr = [1, 3, 5, 7, 9, 11, 13, 15]
-tests = [
-    (binary_search(arr, 7) == 3, "Find 7 → index 3"),
-    (binary_search(arr, 1) == 0, "Find 1 → index 0"),
-    (binary_search(arr, 15) == 7, "Find 15 → index 7"),
-    (binary_search(arr, 6) == -1, "Find 6 → not found"),
-    (binary_search([], 5) == -1, "Empty array → -1"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Maintain left and right pointers. Compute mid = (left+right)//2. If arr[mid]==target return mid. If target > arr[mid], search right half. Otherwise search left half.",
+    type: "mcq",
+    description: `Which binary search correctly returns the index of target in a sorted array (or -1 if missing)?`,
+    options: [
+      "left,right=0,len(arr)\nwhile left<right:\n  mid=(left+right)//2\n  if arr[mid]==target: return mid\n  elif arr[mid]<target: left=mid\n  else: right=mid\nreturn -1",
+      "left,right=0,len(arr)-1\nwhile left<=right:\n  mid=(left+right)//2\n  if arr[mid]==target: return mid\n  elif arr[mid]<target: left=mid+1\n  else: right=mid-1\nreturn -1",
+      "left,right=0,len(arr)-1\nwhile left<right:\n  mid=(left+right)//2\n  if arr[mid]==target: return mid\n  elif arr[mid]<target: left=mid+1\n  else: right=mid-1\nreturn -1",
+      "for i,v in enumerate(arr):\n  if v==target: return i\nreturn -1",
+    ],
+    answer: "left,right=0,len(arr)-1\nwhile left<=right:\n  mid=(left+right)//2\n  if arr[mid]==target: return mid\n  elif arr[mid]<target: left=mid+1\n  else: right=mid-1\nreturn -1",
+    explanation: "Key: right=len-1 (not len), condition left<=right (catches single element), updates mid+1/mid-1 prevent infinite loops. Option A uses left=mid (infinite loop). Option C misses the case left==right. Option D is O(n) linear search.",
   },
   "algo-dynamic-prog": {
-    title: "Max Profit — k Transactions",
+    title: "Max Profit — 2 Transactions",
     difficulty: "hard", category: "Algorithms & Numerical", points: 200,
-    type: "code",
-    description: `Given a list of stock prices, find the **maximum profit** with **at most 2 transactions** (buy-sell pairs). You cannot hold more than one stock at a time.
-
-This is a classic dynamic programming problem seen in quant interviews.`,
-    starterCode: `def max_profit_2_transactions(prices: list) -> float:
-    """
-    Max profit with at most 2 buy-sell transactions.
-    
-    Args:
-        prices: list of daily stock prices
-    
-    Returns:
-        maximum profit achievable
-    """
-    # Your code here
-    pass
-
-print(max_profit_2_transactions([3, 3, 5, 0, 0, 3, 1, 4]))  # Should be 6
-print(max_profit_2_transactions([1, 2, 3, 4, 5]))             # Should be 4
-print(max_profit_2_transactions([7, 6, 4, 3, 1]))             # Should be 0
-`,
-    testCode: `
-def max_profit_2_transactions(prices):
-    if not prices: return 0
-    buy1 = buy2 = float('-inf')
-    sell1 = sell2 = 0
-    for p in prices:
-        buy1 = max(buy1, -p)
-        sell1 = max(sell1, buy1 + p)
-        buy2 = max(buy2, sell1 - p)
-        sell2 = max(sell2, buy2 + p)
-    return sell2
-
-tests = [
-    (max_profit_2_transactions([3,3,5,0,0,3,1,4]) == 6, "Standard case → 6"),
-    (max_profit_2_transactions([1,2,3,4,5]) == 4, "Increasing → 4"),
-    (max_profit_2_transactions([7,6,4,3,1]) == 0, "Decreasing → 0"),
-    (max_profit_2_transactions([1]) == 0, "Single price → 0"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Track 4 state variables: buy1 (best profit after first buy), sell1 (best after first sell), buy2 (best after second buy), sell2 (best after second sell). Update in order for each price.",
+    type: "mcq",
+    description: `Max profit with ≤2 transactions uses 4 state variables. Which update **order** is correct for each price p?`,
+    options: [
+      "sell2=max(sell2,buy2+p); buy2=max(buy2,sell1-p)\nsell1=max(sell1,buy1+p); buy1=max(buy1,-p)",
+      "buy1=max(buy1,-p); sell1=max(sell1,buy1+p)\nbuy2=max(buy2,sell1-p); sell2=max(sell2,buy2+p)",
+      "buy1=max(buy1,-p); buy2=max(buy2,-p)\nsell1=max(sell1,buy1+p); sell2=max(sell2,buy2+p)",
+      "buy1=min(buy1,p); sell1=max(sell1,-buy1+p)\nbuy2=min(buy2,p); sell2=max(sell2,-buy2+p)",
+    ],
+    answer: "buy1=max(buy1,-p); sell1=max(sell1,buy1+p)\nbuy2=max(buy2,sell1-p); sell2=max(sell2,buy2+p)",
+    explanation: "Update in dependency order: buy1→sell1→buy2→sell2. Reversing (Option A) uses future state values. Option C lets buy2 ignore sell1 profit. Option D uses min for buy which double-counts.",
   },
-
-  // ── FINANCE ────────────────────────────────────────────────────────────────
   "sharpe-ratio": {
     title: "Sharpe Ratio",
     difficulty: "easy", category: "Finance", points: 100,
-    type: "code",
-    description: `Compute the **Sharpe Ratio** — the most widely used risk-adjusted performance metric.
+    type: "mcq",
+    description: `Sharpe Ratio = (mean\_return - rf) / sample\_std. Use **sample** std (divide by n-1).
 
-$$\\text{Sharpe} = \\frac{\\bar{R} - R_f}{\\sigma_R}$$
-
-where R̄ is mean return, Rᶠ is risk-free rate, and σ is the **sample** standard deviation of returns.`,
-    starterCode: `import math
-
-def sharpe_ratio(returns: list, risk_free: float = 0.0) -> float:
-    """
-    Compute annualized Sharpe Ratio.
-    
-    Args:
-        returns: list of periodic returns (e.g. daily)
-        risk_free: periodic risk-free rate (default 0)
-    
-    Returns:
-        Sharpe ratio (not annualized here)
-    """
-    # Your code here
-    pass
-
-returns = [0.01, -0.005, 0.02, 0.003, -0.01, 0.015, 0.008]
-print(f"Sharpe: {sharpe_ratio(returns):.4f}")
-`,
-    testCode: `
-import math
-
-def sharpe_ratio(returns, risk_free=0.0):
-    n = len(returns)
-    mean = sum(returns) / n
-    excess = [r - risk_free for r in returns]
-    variance = sum((r - mean)**2 for r in returns) / (n - 1)
-    std = math.sqrt(variance)
-    return (mean - risk_free) / std if std != 0 else 0
-
-returns = [0.01, -0.005, 0.02, 0.003, -0.01, 0.015, 0.008]
-result = sharpe_ratio(returns)
-tests = [
-    (abs(result - 0.8865) < 0.01, f"Sharpe ≈ 0.8865 (got {result:.4f})"),
-    (sharpe_ratio([0.01]*5) == 0, "Zero std → 0 Sharpe"),
-    (sharpe_ratio([0.02, 0.02, 0.02, 0.02], 0.02) == 0, "Returns = risk-free → 0"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Compute mean return, subtract risk-free rate, divide by sample standard deviation (divide by n-1).",
+Which is correct?`,
+    options: [
+      "mean=sum(r)/n\nstd=(sum((r-mean)**2 for r in returns)/n)**0.5\nreturn mean/std",
+      "mean=sum(returns)/n\nvar=sum((r-mean)**2 for r in returns)/(n-1)\nreturn (mean-rf)/var**0.5",
+      "mean=sum(returns)/n\nvar=sum((r-mean)**2 for r in returns)/n\nreturn (mean-rf)/var**0.5",
+      "return (max(returns)-min(returns))/n",
+    ],
+    answer: "mean=sum(returns)/n\nvar=sum((r-mean)**2 for r in returns)/(n-1)\nreturn (mean-rf)/var**0.5",
+    explanation: "Option A omits rf and uses population std (n). Option B is correct: sample variance (n-1), subtracts rf. Option C uses population std (n not n-1). Option D is range/n which has nothing to do with Sharpe.",
   },
   "max-drawdown": {
     title: "Maximum Drawdown",
     difficulty: "medium", category: "Finance", points: 100,
-    type: "code",
-    description: `Compute the **Maximum Drawdown (MDD)** — the largest peak-to-trough decline in a price series.
+    type: "mcq",
+    description: `Max Drawdown = max over time of (running\_peak - price) / running\_peak.
 
-$$\\text{MDD} = \\max_{t} \\left( \\frac{\\text{Peak}_t - \\text{Price}_t}{\\text{Peak}_t} \\right)$$`,
-    starterCode: `def max_drawdown(prices: list) -> float:
-    """
-    Compute maximum drawdown from a price series.
-    
-    Args:
-        prices: list of prices (positive values)
-    
-    Returns:
-        maximum drawdown as a positive fraction (e.g. 0.25 = 25% drawdown)
-    """
-    # Your code here
-    pass
-
-prices = [100, 90, 110, 80, 120, 95, 130]
-print(f"Max Drawdown: {max_drawdown(prices):.4f}")  # ≈ 0.2727
-`,
-    testCode: `
-def max_drawdown(prices):
-    peak = prices[0]
-    mdd = 0
-    for p in prices:
-        peak = max(peak, p)
-        mdd = max(mdd, (peak - p) / peak)
-    return mdd
-
-tests = [
-    (abs(max_drawdown([100,90,110,80,120,95,130]) - 0.2727) < 0.001, "Standard case ≈ 0.2727"),
-    (abs(max_drawdown([100,110,120,130]) - 0.0) < 0.001, "Always increasing → 0"),
-    (abs(max_drawdown([100,50,25]) - 0.75) < 0.001, "100→50→25, MDD=75%"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Track the running peak. For each price, compute (peak - price)/peak. The maximum of this across all points is the max drawdown.",
+Which implementation is correct?`,
+    options: [
+      "mdd=0\nfor i in range(1,len(p)):\n  dd=(p[i-1]-p[i])/p[i-1]\n  mdd=max(mdd,dd)\nreturn mdd",
+      "peak=prices[0]; mdd=0\nfor p in prices:\n  peak=max(peak,p)\n  mdd=max(mdd,(peak-p)/peak)\nreturn mdd",
+      "peak=max(prices); mdd=0\nfor p in prices:\n  mdd=max(mdd,(peak-p)/peak)\nreturn mdd",
+      "return (max(prices)-min(prices))/max(prices)",
+    ],
+    answer: "peak=prices[0]; mdd=0\nfor p in prices:\n  peak=max(peak,p)\n  mdd=max(mdd,(peak-p)/peak)\nreturn mdd",
+    explanation: "Option A only checks consecutive drops, misses multi-step drawdowns. Option B is correct: track running peak, measure drawdown from it. Option C uses global max as peak — misses drawdowns before the global peak. Option D gives wrong answer when min precedes max.",
   },
   "rolling-moving-average": {
     title: "Simple Moving Average",
     difficulty: "easy", category: "Finance", points: 50,
-    type: "code",
-    description: `Compute a **Simple Moving Average (SMA)** for a price series.
+    type: "mcq",
+    description: `SMA with window k: average of last k prices. Return None for the first k-1 positions.
 
-For a window of size k, the SMA at position i is the average of prices[i-k+1 : i+1].
-
-Return **None** (or NaN) for positions where there aren't enough data points.`,
-    starterCode: `def sma(prices: list, window: int) -> list:
-    """
-    Compute Simple Moving Average.
-    
-    Args:
-        prices: list of prices
-        window: rolling window size
-    
-    Returns:
-        list of SMA values (None for first window-1 positions)
-    """
-    result = []
-    # Your code here
-    return result
-
-prices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-print(sma(prices, 3))  # [None, None, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
-`,
-    testCode: `
-def sma(prices, window):
-    result = [None] * (window - 1)
-    for i in range(window - 1, len(prices)):
-        result.append(sum(prices[i-window+1:i+1]) / window)
-    return result
-
-prices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-r = sma(prices, 3)
-tests = [
-    (r[:2] == [None, None], "First 2 values are None"),
-    (abs(r[2] - 2.0) < 0.001, "Index 2: avg(1,2,3) = 2.0"),
-    (abs(r[9] - 9.0) < 0.001, "Last value: avg(8,9,10) = 9.0"),
-    (len(r) == 10, "Output length matches input"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "For each position i ≥ window-1, average prices[i-window+1 : i+1]. For earlier positions, output None.",
+Which implementation is correct?`,
+    options: [
+      "result=[]\nfor i in range(len(prices)):\n  if i<k: result.append(None)\n  else: result.append(sum(prices[i-k:i])/k)",
+      "result=[None]*(k-1)\nfor i in range(k-1,len(prices)):\n  result.append(sum(prices[i-k+1:i+1])/k)\nreturn result",
+      "result=[None]*k\nfor i in range(k,len(prices)):\n  result.append(sum(prices[i-k:i])/k)\nreturn result",
+      "return [sum(prices[i:i+k])/k for i in range(len(prices)-k+1)]",
+    ],
+    answer: "result=[None]*(k-1)\nfor i in range(k-1,len(prices)):\n  result.append(sum(prices[i-k+1:i+1])/k)\nreturn result",
+    explanation: "Option A at i=k slices prices[0:k] but misses index i (off by one). Option B is correct: k-1 Nones, slice [i-k+1:i+1] includes index i. Option C has k Nones (one too many) and wrong slice. Option D returns shorter array with no Nones.",
   },
   "macd-signal": {
     title: "MACD Signal Line",
@@ -931,114 +532,36 @@ A **bullish signal** is generated when:`,
   "momentum-signal": {
     title: "Momentum Signal",
     difficulty: "medium", category: "Finance", points: 125,
-    type: "code",
-    description: `Implement a **price momentum signal**: the percentage return over a lookback window.
+    type: "mcq",
+    description: `Momentum = **(P_t - P_{t-k}) / P_{t-k}** — return None for first k values.
 
-$$\\text{Momentum}(t, k) = \\frac{P_t - P_{t-k}}{P_{t-k}}$$
-
-Return None for the first k positions.`,
-    starterCode: `def momentum(prices: list, lookback: int) -> list:
-    """
-    Compute momentum signal.
-    
-    Args:
-        prices: list of prices
-        lookback: lookback window k
-    
-    Returns:
-        list of momentum values (None for first lookback positions)
-    """
-    result = []
-    # Your code here
-    return result
-
-prices = [100, 102, 98, 105, 110, 108, 115]
-print(momentum(prices, 3))
-`,
-    testCode: `
-def momentum(prices, lookback):
-    result = [None] * lookback
-    for i in range(lookback, len(prices)):
-        result.append((prices[i] - prices[i-lookback]) / prices[i-lookback])
-    return result
-
-prices = [100, 102, 98, 105, 110, 108, 115]
-r = momentum(prices, 3)
-tests = [
-    (r[:3] == [None, None, None], "First 3 are None"),
-    (abs(r[3] - 0.05) < 0.001, "momentum[3] = (105-100)/100 = 0.05"),
-    (abs(r[6] - 0.1731) < 0.001, "momentum[6] = (115-98)/98 ≈ 0.1731"),
-    (len(r) == 7, "Output length correct"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "For each index i ≥ lookback, compute (prices[i] - prices[i-lookback]) / prices[i-lookback]. First lookback values are None.",
+Which implementation is correct?`,
+    options: [
+      "result=[None]*k\nfor i in range(k,len(p)):\n  result.append(p[i]-p[i-k])\nreturn result",
+      "result=[None]*k\nfor i in range(k,len(p)):\n  result.append((p[i]-p[i-k])/p[i])\nreturn result",
+      "result=[None]*k\nfor i in range(k,len(p)):\n  result.append((p[i]-p[i-k])/p[i-k])\nreturn result",
+      "result=[None]*(k-1)\nfor i in range(k-1,len(p)):\n  result.append((p[i]-p[i-k+1])/p[i-k+1])\nreturn result",
+    ],
+    answer: "result=[None]*k\nfor i in range(k,len(p)):\n  result.append((p[i]-p[i-k])/p[i-k])\nreturn result",
+    explanation: "Option A computes absolute difference, not percentage. Option B divides by current price p[i] instead of past price p[i-k]. Option C is correct. Option D uses k-1 Nones and wrong index — off by one.",
   },
-
-  // ── OPTIONS & FUTURES ──────────────────────────────────────────────────────
   "black-scholes-call": {
     title: "Black-Scholes Call Price",
     difficulty: "medium", category: "Options & Futures", points: 150,
-    type: "code",
-    description: `Implement the **Black-Scholes formula** for a European call option:
+    type: "mcq",
+    description: `Black-Scholes: C = S·N(d₁) - K·e^(-rT)·N(d₂)
 
-$$C = S_0 N(d_1) - K e^{-rT} N(d_2)$$
+d₁ = [ln(S/K) + (r + **σ²/2**)T] / (σ√T),   d₂ = d₁ - σ√T
 
-$$d_1 = \\frac{\\ln(S_0/K) + (r + \\sigma^2/2)T}{\\sigma\\sqrt{T}}, \\quad d_2 = d_1 - \\sigma\\sqrt{T}$$
-
-where N(·) is the standard normal CDF.`,
-    starterCode: `import math
-
-def black_scholes_call(S: float, K: float, T: float, r: float, sigma: float) -> float:
-    """
-    Black-Scholes European call option price.
-    
-    Args:
-        S: current stock price
-        K: strike price
-        T: time to expiry (years)
-        r: risk-free rate (annual)
-        sigma: volatility (annual)
-    
-    Returns:
-        call option price
-    """
-    # Hint: implement norm_cdf using math.erfc
-    def norm_cdf(x):
-        return 0.5 * math.erfc(-x / math.sqrt(2))
-    
-    # Your code here
-    pass
-
-price = black_scholes_call(100, 100, 1.0, 0.05, 0.2)
-print(f"Call price: {price:.4f}")  # Should be ≈ 10.4506
-`,
-    testCode: `
-import math
-
-def black_scholes_call(S, K, T, r, sigma):
-    def norm_cdf(x):
-        return 0.5 * math.erfc(-x / math.sqrt(2))
-    d1 = (math.log(S/K) + (r + 0.5*sigma**2)*T) / (sigma*math.sqrt(T))
-    d2 = d1 - sigma*math.sqrt(T)
-    return S*norm_cdf(d1) - K*math.exp(-r*T)*norm_cdf(d2)
-
-tests = [
-    (abs(black_scholes_call(100,100,1.0,0.05,0.2) - 10.4506) < 0.01, "ATM call ≈ 10.4506"),
-    (abs(black_scholes_call(110,100,1.0,0.05,0.2) - 17.6964) < 0.01, "ITM call ≈ 17.6964"),
-    (abs(black_scholes_call(100,110,1.0,0.05,0.2) - 6.0401) < 0.01, "OTM call ≈ 6.0401"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Compute d1 and d2, then use norm_cdf (implemented via math.erfc) to evaluate N(d1) and N(d2). Final price = S×N(d1) - K×e^(-rT)×N(d2).",
+Which d₁ formula is correct?`,
+    options: [
+      "d1 = (math.log(S/K) + (r - 0.5*sigma**2)*T) / (sigma*math.sqrt(T))",
+      "d1 = (math.log(S/K) + (r + 0.5*sigma**2)*T) / (sigma*math.sqrt(T))",
+      "d1 = (math.log(S/K) + r*T) / (sigma*math.sqrt(T))",
+      "d1 = (S/K + (r + 0.5*sigma**2)*T) / (sigma*math.sqrt(T))",
+    ],
+    answer: "d1 = (math.log(S/K) + (r + 0.5*sigma**2)*T) / (sigma*math.sqrt(T))",
+    explanation: "Option A uses (r - σ²/2) which is d₂ not d₁. Option B is correct. Option C omits the σ²/2 convexity correction. Option D uses S/K instead of ln(S/K) — missing the logarithm.",
   },
   "option-delta": {
     title: "Option Delta",
@@ -1101,99 +624,34 @@ This market is in **contango** (futures > spot).
   "value-at-risk": {
     title: "Value at Risk (Historical)",
     difficulty: "easy", category: "Portfolio & Risk", points: 100,
-    type: "code",
-    description: `Compute the **Historical Value at Risk (VaR)** at a given confidence level.
+    type: "mcq",
+    description: `Historical VaR at 95% = **5th percentile of losses** = negative of 5th percentile of returns.
 
-VaR at 95% confidence means: *"We are 95% confident that losses will not exceed X in the next period."*
-
-Historical VaR is simply the (1-confidence) percentile of the **loss distribution** (negated returns).`,
-    starterCode: `def historical_var(returns: list, confidence: float = 0.95) -> float:
-    """
-    Compute Historical VaR.
-    
-    Args:
-        returns: list of periodic returns
-        confidence: confidence level (e.g. 0.95 for 95%)
-    
-    Returns:
-        VaR as a positive number (e.g. 0.02 means 2% loss)
-    """
-    # Your code here
-    pass
-
-import random
-random.seed(42)
-returns = [random.gauss(0.001, 0.02) for _ in range(1000)]
-var_95 = historical_var(returns)
-print(f"95% VaR: {var_95:.4f}")  # Should be ≈ 0.032
-`,
-    testCode: `
-def historical_var(returns, confidence=0.95):
-    sorted_returns = sorted(returns)
-    index = int((1 - confidence) * len(sorted_returns))
-    return -sorted_returns[index]
-
-import random
-random.seed(42)
-returns = [random.gauss(0.001, 0.02) for _ in range(1000)]
-var_95 = historical_var(returns)
-var_99 = historical_var(returns, 0.99)
-tests = [
-    (0.025 < var_95 < 0.045, f"95% VaR in reasonable range (got {var_95:.4f})"),
-    (var_99 > var_95, "99% VaR > 95% VaR"),
-    (historical_var([-0.01, -0.02, -0.03, -0.04, -0.05, 0.01, 0.02, 0.03, 0.04, 0.05], 0.9) > 0, "VaR is positive"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Sort returns ascending. The 5th percentile (for 95% VaR) is at index int(0.05 × n). Negate it to express as a positive loss.",
+Which is correct?`,
+    options: [
+      "sorted_r=sorted(returns,reverse=True)\nreturn sorted_r[int(0.05*len(sorted_r))]",
+      "sorted_r=sorted(returns)\nreturn -sorted_r[int(0.05*len(sorted_r))]",
+      "sorted_r=sorted(returns)\nreturn sorted_r[int(0.05*len(sorted_r))]",
+      "sorted_r=sorted(returns)\nreturn -sorted_r[int(0.95*len(sorted_r))]",
+    ],
+    answer: "sorted_r=sorted(returns)\nreturn -sorted_r[int(0.05*len(sorted_r))]",
+    explanation: "Sort ascending (worst returns first), take 5th percentile index, negate to express as positive loss. Option A sorts descending and doesn't negate. Option C returns a negative number (forgot to negate). Option D takes the 95th percentile — the best returns.",
   },
   "portfolio-return": {
     title: "Portfolio Return",
     difficulty: "easy", category: "Portfolio & Risk", points: 50,
-    type: "code",
-    description: `Compute the **weighted portfolio return** given asset weights and returns.
+    type: "mcq",
+    description: `Portfolio return = **Σ wᵢ × rᵢ** (dot product of weights and returns).
 
-$$R_p = \\sum_{i=1}^{n} w_i \\cdot R_i$$
-
-The weights must sum to 1.`,
-    starterCode: `def portfolio_return(weights: list, returns: list) -> float:
-    """
-    Compute weighted portfolio return.
-    
-    Args:
-        weights: list of asset weights (must sum to 1)
-        returns: list of asset returns
-    
-    Returns:
-        portfolio return
-    """
-    # Your code here
-    pass
-
-weights = [0.4, 0.3, 0.3]
-returns = [0.10, 0.05, -0.02]
-print(portfolio_return(weights, returns))  # Should be 0.049
-`,
-    testCode: `
-def portfolio_return(weights, returns):
-    return sum(w * r for w, r in zip(weights, returns))
-
-tests = [
-    (abs(portfolio_return([0.4,0.3,0.3],[0.10,0.05,-0.02]) - 0.049) < 0.0001, "Standard case → 0.049"),
-    (abs(portfolio_return([1.0],[0.08]) - 0.08) < 0.0001, "Single asset → 8%"),
-    (abs(portfolio_return([0.5,0.5],[0.10,0.10]) - 0.10) < 0.0001, "Equal weights same return → 10%"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Simply compute the dot product of weights and returns: sum(w_i × r_i for each asset).",
+For weights=[0.4,0.3,0.3], returns=[0.10,0.05,-0.02], which is correct?`,
+    options: [
+      "return sum(w + r for w,r in zip(weights,returns))",
+      "return sum(weights) * sum(returns) / len(weights)",
+      "return sum(w * r for w,r in zip(weights,returns))",
+      "return max(w * r for w,r in zip(weights,returns))",
+    ],
+    answer: "return sum(w * r for w,r in zip(weights,returns))",
+    explanation: "Option A adds w+r instead of multiplying w×r. Option B incorrectly multiplies sums. Option C is correct — dot product. Option D returns only the largest term, ignoring the others.",
   },
   "expected-shortfall": {
     title: "Expected Shortfall (CVaR)",
@@ -1237,50 +695,18 @@ What is the portfolio variance? Round to 4 decimal places.`,
   "stats-ols-regression": {
     title: "OLS Linear Regression",
     difficulty: "easy", category: "Statistics", points: 100,
-    type: "code",
-    description: `Implement **Ordinary Least Squares (OLS)** regression from scratch.
+    type: "mcq",
+    description: `OLS slope: **β₁ = Σ(xᵢ-x̄)(yᵢ-ȳ) / Σ(xᵢ-x̄)²**
 
-For y = β₀ + β₁x, the OLS estimates are:
-
-$$\\beta_1 = \\frac{\\sum(x_i - \\bar{x})(y_i - \\bar{y})}{\\sum(x_i - \\bar{x})^2}, \\quad \\beta_0 = \\bar{y} - \\beta_1 \\bar{x}$$`,
-    starterCode: `def ols_regression(x: list, y: list) -> tuple:
-    """
-    Fit OLS linear regression y = b0 + b1*x.
-    
-    Returns:
-        (b0, b1) intercept and slope
-    """
-    # Your code here
-    pass
-
-x = [1, 2, 3, 4, 5]
-y = [2.1, 3.9, 6.2, 7.8, 10.1]
-b0, b1 = ols_regression(x, y)
-print(f"Intercept (b0): {b0:.4f}")  # ≈ 0.12
-print(f"Slope (b1):     {b1:.4f}")  # ≈ 2.0
-`,
-    testCode: `
-def ols_regression(x, y):
-    n = len(x)
-    x_mean = sum(x)/n; y_mean = sum(y)/n
-    b1 = sum((xi-x_mean)*(yi-y_mean) for xi,yi in zip(x,y)) / sum((xi-x_mean)**2 for xi in x)
-    b0 = y_mean - b1*x_mean
-    return b0, b1
-
-x = [1,2,3,4,5]; y = [2.1,3.9,6.2,7.8,10.1]
-b0, b1 = ols_regression(x, y)
-tests = [
-    (abs(b1 - 1.99) < 0.05, f"Slope ≈ 1.99 (got {b1:.4f})"),
-    (abs(b0 - 0.12) < 0.1, f"Intercept ≈ 0.12 (got {b0:.4f})"),
-    (abs(ols_regression([0,1,2],[0,2,4])[1] - 2.0) < 0.001, "Perfect slope=2"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Compute x̄ and ȳ. Then β₁ = Σ(xᵢ-x̄)(yᵢ-ȳ) / Σ(xᵢ-x̄)². Then β₀ = ȳ - β₁x̄.",
+Which implementation is correct?`,
+    options: [
+      "xm=sum(x)/n; ym=sum(y)/n\nb1=sum((xi-xm)*(yi-ym) for xi,yi in zip(x,y))/sum((xi-xm) for xi in x)",
+      "xm=sum(x)/n; ym=sum(y)/n\nb1=sum((xi-xm)*(yi-ym) for xi,yi in zip(x,y))/sum((xi-xm)**2 for xi in x)",
+      "b1=sum(xi*yi for xi,yi in zip(x,y))/sum(xi**2 for xi in x)",
+      "xm=sum(x)/n\nb1=sum((xi-xm)**2 for xi in x)/sum((xi-xm)*(yi-ym) for xi,yi in zip(x,y))",
+    ],
+    answer: "xm=sum(x)/n; ym=sum(y)/n\nb1=sum((xi-xm)*(yi-ym) for xi,yi in zip(x,y))/sum((xi-xm)**2 for xi in x)",
+    explanation: "Option A divides by Σ(xᵢ-x̄) instead of Σ(xᵢ-x̄)² — missing the square. Option B is correct. Option C omits mean-centering. Option D has numerator and denominator swapped.",
   },
   "stats-autocorrelation": {
     title: "Autocorrelation (ACF)",
@@ -1303,57 +729,18 @@ What does high positive autocorrelation in financial returns imply?`,
   "stats-bootstrap": {
     title: "Bootstrap Confidence Interval",
     difficulty: "medium", category: "Statistics", points: 125,
-    type: "code",
-    description: `Implement **bootstrap resampling** to estimate a 95% confidence interval for the mean.
+    type: "mcq",
+    description: `Bootstrap resamples data **with replacement** to estimate uncertainty.
 
-Steps:
-1. Resample the data **n_bootstrap** times with replacement
-2. Compute the mean of each resample
-3. Return the 2.5th and 97.5th percentile of the bootstrap means`,
-    starterCode: `import random
-
-def bootstrap_ci(data: list, n_bootstrap: int = 1000, seed: int = 42) -> tuple:
-    """
-    Compute 95% bootstrap confidence interval for the mean.
-    
-    Returns:
-        (lower, upper) bounds of 95% CI
-    """
-    random.seed(seed)
-    n = len(data)
-    bootstrap_means = []
-    # Your code here
-    pass
-
-data = [2.3, 1.5, 3.2, 2.8, 1.9, 3.5, 2.1, 2.7, 3.0, 2.5]
-lower, upper = bootstrap_ci(data)
-print(f"95% CI: [{lower:.4f}, {upper:.4f}]")
-`,
-    testCode: `
-import random
-
-def bootstrap_ci(data, n_bootstrap=1000, seed=42):
-    random.seed(seed)
-    n = len(data)
-    means = [sum(random.choices(data, k=n))/n for _ in range(n_bootstrap)]
-    means.sort()
-    lo = int(0.025 * n_bootstrap); hi = int(0.975 * n_bootstrap)
-    return means[lo], means[hi]
-
-data = [2.3,1.5,3.2,2.8,1.9,3.5,2.1,2.7,3.0,2.5]
-lo, hi = bootstrap_ci(data)
-tests = [
-    (lo < sum(data)/len(data) < hi, "True mean is within CI"),
-    (hi > lo, "Upper > lower"),
-    (abs(lo - 2.09) < 0.2, f"Lower ≈ 2.09 (got {lo:.2f})"),
-]
-passed = 0
-for ok, name in tests:
-    print(f"{'✅' if ok else '❌'} {name}")
-    if ok: passed += 1
-print(f"\\n{passed}/{len(tests)} tests passed")
-`,
-    explanation: "Use random.choices() for sampling with replacement. Collect 1000 bootstrap means, sort them, and return the 2.5% and 97.5% quantiles.",
+Which resampling step is correct?`,
+    options: [
+      "sample = random.sample(data, len(data))  # without replacement",
+      "sample = random.choices(data, k=len(data))  # with replacement",
+      "sample = data[:]  # copy the data",
+      "sample = sorted(data)[:int(0.95*len(data))]  # trim top 5%",
+    ],
+    answer: "sample = random.choices(data, k=len(data))  # with replacement",
+    explanation: "Bootstrap must resample **with replacement** — this simulates drawing new datasets from the population. random.sample (Option A) samples without replacement, just shuffling. Options C and D don't resample at all.",
   },
   "stats-hurst-exponent": {
     title: "Hurst Exponent",
@@ -1377,22 +764,6 @@ A pairs trading strategy would work best on a spread with:`,
   },
 };
 
-// ─── PYODIDE RUNNER ──────────────────────────────────────────────────────────
-
-async function getPyodide() {
-  if ((window as any).pyodide) return (window as any).pyodide;
-  if (!(window as any).loadPyodide) {
-    await new Promise<void>((res, rej) => {
-      const s = document.createElement("script");
-      s.src = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js";
-      s.onload = () => res(); s.onerror = () => rej(new Error("Pyodide load failed"));
-      document.head.appendChild(s);
-    });
-  }
-  (window as any).pyodide = await (window as any).loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
-  return (window as any).pyodide;
-}
-
 // ─── PROBLEM PAGE ────────────────────────────────────────────────────────────
 const DIFF_STYLE: Record<string, string> = {
   easy:   "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
@@ -1405,23 +776,11 @@ export default function ProblemPage() {
   const router = useRouter();
   const problem = PROBLEM_DATA[slug as string];
 
-  const [code, setCode] = useState(problem?.starterCode || "");
   const [answer, setAnswer] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [output, setOutput] = useState("");
-  const [status, setStatus] = useState<"idle"|"running"|"pass"|"fail">("idle");
-  const [pyReady, setPyReady] = useState(false);
-  const [pyLoading, setPyLoading] = useState(false);
+  const [status, setStatus] = useState<"idle"|"pass"|"fail">("idle");
   const [explanation, setExplanation] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    if (!problem) return;
-    if (problem.type === "code" && !pyReady) {
-      setPyLoading(true);
-      getPyodide().then(() => { setPyReady(true); setPyLoading(false); }).catch(() => setPyLoading(false));
-    }
-  }, [problem]);
 
   if (!problem) {
     return (
@@ -1433,26 +792,6 @@ export default function ProblemPage() {
       </div>
     );
   }
-
-  const handleRunCode = async () => {
-    if (!pyReady) { setOutput("⏳ Python is still loading..."); return; }
-    setStatus("running"); setOutput("Running...");
-    try {
-      const py = await getPyodide();
-      // Capture stdout
-      py.runPython(`import sys, io; sys.stdout = io.StringIO()`);
-      const fullCode = code + "\n\n" + problem.testCode;
-      py.runPython(fullCode);
-      const out = py.runPython("sys.stdout.getvalue()");
-      py.runPython("sys.stdout = sys.__stdout__");
-      setOutput(out);
-      setStatus(out.includes("❌") ? "fail" : "pass");
-    } catch (e: any) {
-      try { const py2 = await getPyodide(); py2.runPython("sys.stdout = sys.__stdout__"); } catch {}
-      setOutput("❌ Error:\n" + String(e.message || e));
-      setStatus("fail");
-    }
-  };
 
   const handleCheckMCQ = () => {
     if (!selectedOption) return;
@@ -1473,16 +812,6 @@ export default function ProblemPage() {
     if (correct) setExplanation(true);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      const ta = textareaRef.current!;
-      const start = ta.selectionStart; const end = ta.selectionEnd;
-      const newVal = code.substring(0, start) + "    " + code.substring(end);
-      setCode(newVal);
-      setTimeout(() => { ta.selectionStart = ta.selectionEnd = start + 4; }, 0);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-dark-950">
@@ -1501,10 +830,10 @@ export default function ProblemPage() {
         <span className="text-xs text-slate-600 font-mono">{problem.points} pts</span>
       </div>
 
-      <div className={clsx("flex h-[calc(100vh-53px)]", problem.type === "code" ? "flex-row" : "flex-col max-w-3xl mx-auto py-8 px-6")}>
+      <div className="flex flex-col max-w-3xl mx-auto py-8 px-6">
 
         {/* ── DESCRIPTION PANEL ── */}
-        <div className={clsx("overflow-y-auto", problem.type === "code" ? "w-1/2 border-r border-slate-800 p-6" : "w-full")}>
+        <div className="w-full overflow-y-auto">
           <div className="prose prose-invert prose-sm max-w-none">
             {problem.description.split("\n").map((line: string, i: number) => {
               if (!line.trim()) return <br key={i} />;
@@ -1523,17 +852,30 @@ export default function ProblemPage() {
           {/* MCQ */}
           {problem.type === "mcq" && (
             <div className="mt-6 space-y-3">
-              {problem.options.map((opt: string) => (
-                <button key={opt} onClick={() => { setSelectedOption(opt); setStatus("idle"); setOutput(""); setExplanation(false); }}
-                  className={clsx("w-full text-left px-4 py-3 rounded-xl border text-sm transition-all",
-                    selectedOption === opt
-                      ? status === "pass" ? "border-emerald-500 bg-emerald-500/10 text-emerald-300"
-                        : status === "fail" ? "border-red-500 bg-red-500/10 text-red-300"
-                        : "border-brand-500 bg-brand-500/10 text-slate-100"
-                      : "border-slate-700 bg-slate-800/40 text-slate-400 hover:border-slate-500 hover:text-slate-200")}>
-                  {opt}
-                </button>
-              ))}
+              {problem.options.map((opt: string, idx: number) => {
+                const isCode = opt.includes("\\n") || opt.includes("return ") || opt.includes("def ") || opt.includes("=") && opt.includes("(");
+                const displayOpt = opt.replace(/\\n/g, "\n");
+                return (
+                  <button key={idx} onClick={() => { setSelectedOption(opt); setStatus("idle"); setOutput(""); setExplanation(false); }}
+                    className={clsx("w-full text-left rounded-xl border transition-all",
+                      selectedOption === opt
+                        ? status === "pass" ? "border-emerald-500 bg-emerald-500/10"
+                          : status === "fail" ? "border-red-500 bg-red-500/10"
+                          : "border-brand-500 bg-brand-500/10"
+                        : "border-slate-700 bg-slate-800/40 hover:border-slate-500")}>
+                    {isCode
+                      ? <pre className={clsx("px-4 py-3 text-xs font-mono whitespace-pre-wrap leading-relaxed",
+                          selectedOption === opt
+                            ? status === "pass" ? "text-emerald-300" : status === "fail" ? "text-red-300" : "text-slate-100"
+                            : "text-slate-400")}>{displayOpt}</pre>
+                      : <span className={clsx("block px-4 py-3 text-sm",
+                          selectedOption === opt
+                            ? status === "pass" ? "text-emerald-300" : status === "fail" ? "text-red-300" : "text-slate-100"
+                            : "text-slate-400")}>{displayOpt}</span>
+                    }
+                  </button>
+                );
+              })}
               <button onClick={handleCheckMCQ} disabled={!selectedOption}
                 className="mt-2 w-full py-3 bg-brand-500 hover:bg-brand-400 disabled:opacity-40 text-dark-900 font-bold rounded-xl transition-colors">
                 Check Answer
@@ -1558,7 +900,7 @@ export default function ProblemPage() {
           )}
 
           {/* Output for MCQ/Value */}
-          {output && problem.type !== "code" && (
+          {output && (
             <div className={clsx("mt-4 p-4 rounded-xl border text-sm font-mono",
               status === "pass" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
                 : "bg-red-500/10 border-red-500/20 text-red-300")}>
@@ -1575,57 +917,6 @@ export default function ProblemPage() {
           )}
         </div>
 
-        {/* ── CODE EDITOR PANEL ── */}
-        {problem.type === "code" && (
-          <div className="w-1/2 flex flex-col">
-            {/* Editor */}
-            <div className="flex-1 relative bg-slate-900">
-              <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900">
-                <span className="text-xs text-slate-500 font-mono">Python</span>
-                <div className="flex items-center gap-2">
-                  {pyLoading && <span className="text-xs text-slate-500 flex items-center gap-1"><Loader2 size={12} className="animate-spin" /> Loading Python...</span>}
-                  {pyReady && <span className="text-xs text-emerald-500">● Python ready</span>}
-                  <button onClick={() => { setCode(problem.starterCode); setOutput(""); setStatus("idle"); }}
-                    className="text-slate-600 hover:text-slate-400 transition-colors"><RotateCcw size={13} /></button>
-                </div>
-              </div>
-              <textarea
-                ref={textareaRef}
-                value={code}
-                onChange={e => setCode(e.target.value)}
-                onKeyDown={handleKeyDown}
-                spellCheck={false}
-                className="w-full h-full resize-none bg-transparent text-slate-200 font-mono text-sm p-4 outline-none leading-relaxed"
-                style={{ minHeight: "calc(100% - 40px)" }}
-              />
-            </div>
-
-            {/* Run button */}
-            <div className="border-t border-slate-800 p-3 flex items-center gap-3">
-              <button onClick={handleRunCode} disabled={status === "running" || !pyReady}
-                className="flex items-center gap-2 bg-brand-500 hover:bg-brand-400 disabled:opacity-50 text-dark-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-colors">
-                {status === "running" ? <><Loader2 size={14} className="animate-spin" /> Running...</> : <><Play size={14} /> Run Tests</>}
-              </button>
-              {status === "pass" && <span className="flex items-center gap-1.5 text-emerald-400 text-sm font-semibold"><CheckCircle2 size={16} /> All tests passed!</span>}
-              {status === "fail" && <span className="flex items-center gap-1.5 text-red-400 text-sm"><XCircle size={16} /> Tests failed</span>}
-            </div>
-
-            {/* Output */}
-            {output && output !== "Running..." && (
-              <div className="border-t border-slate-800 bg-slate-900/80 max-h-48 overflow-y-auto">
-                <pre className="p-4 text-xs font-mono text-slate-300 whitespace-pre-wrap">{output}</pre>
-              </div>
-            )}
-
-            {/* Explanation on pass */}
-            {status === "pass" && problem.explanation && (
-              <div className="border-t border-slate-800 p-4 bg-slate-900/60">
-                <p className="text-xs font-bold text-slate-400 uppercase mb-2">Hint / Explanation</p>
-                <p className="text-xs text-slate-400 leading-relaxed">{problem.explanation}</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
