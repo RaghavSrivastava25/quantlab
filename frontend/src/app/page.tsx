@@ -2,20 +2,20 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowRight, Zap, Code2, BookOpen, BarChart2 } from "lucide-react";
+import { ArrowRight, Zap, BarChart2, BookOpen } from "lucide-react";
 
 const SpacetimeGrid = dynamic(() => import("@/components/ui/SpacetimeGrid"), { ssr: false });
 
 const CATEGORIES = [
-  { key: "brain",       label: "Brain Teasers",          color: "#ec4899", desc: "12 problems — Monty Hall, Kelly, Game Theory, Paradoxes" },
-  { key: "probability", label: "Probability",            color: "#10b981", desc: "7 problems — Bayes, Monte Carlo, Distributions" },
-  { key: "stochastic",  label: "Stochastic Processes",   color: "#8b5cf6", desc: "5 problems — GBM, Itô's Lemma, OU Process" },
-  { key: "calculus",    label: "Calculus & Linear Algebra", color: "#3b82f6", desc: "6 problems — Gradient Descent, Eigenvalues, PCA" },
-  { key: "algorithms",  label: "Algorithms & Numerical", color: "#f97316", desc: "6 problems — Bisection, Dynamic Programming, Kalman" },
-  { key: "finance",     label: "Finance",                color: "#06b6d4", desc: "10 problems — Sharpe, Drawdown, MACD, Momentum" },
-  { key: "options",     label: "Options & Futures",      color: "#f59e0b", desc: "6 problems — Black-Scholes, Greeks, Roll Yield" },
-  { key: "portfolio",   label: "Portfolio & Risk",       color: "#ef4444", desc: "5 problems — VaR, CVaR, Markowitz, Rebalancing" },
-  { key: "statistics",  label: "Statistics",             color: "#64748b", desc: "6 problems — OLS, Bootstrap, ACF, Hurst Exponent" },
+  { key: "brain",       label: "Brain Teasers",            color: "#ec4899", desc: "Screwy Pirates, Tiger & Sheep, River Crossing, Burning Ropes" },
+  { key: "probability", label: "Probability",              color: "#10b981", desc: "Bayes, Monty Hall, Coin Tosses, Dice, Distributions" },
+  { key: "stochastic",  label: "Stochastic Processes",     color: "#8b5cf6", desc: "GBM, Itô's Lemma, Markov Chains, Random Walks, Martingales" },
+  { key: "calculus",    label: "Calculus & Linear Algebra", color: "#3b82f6", desc: "Derivatives, Taylor Series, Eigenvalues, ODEs, Lagrange" },
+  { key: "algorithms",  label: "Algorithms & Numerical",   color: "#f97316", desc: "Sorting, Dynamic Programming, Monte Carlo, Finite Difference" },
+  { key: "finance",     label: "Finance",                  color: "#06b6d4", desc: "Options, Futures, Duration, VaR, Portfolio Optimization" },
+  { key: "options",     label: "Options & Greeks",         color: "#f59e0b", desc: "Black-Scholes, Delta, Gamma, Vega, Theta, Put-Call Parity" },
+  { key: "portfolio",   label: "Portfolio & Risk",         color: "#ef4444", desc: "Sharpe Ratio, Drawdown, Markowitz, CVaR, Rebalancing" },
+  { key: "statistics",  label: "Statistics",               color: "#64748b", desc: "OLS Regression, Bootstrap, ACF, Hurst Exponent, t-Tests" },
 ];
 
 export default function Home() {
@@ -39,14 +39,11 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-              Solve quant coding challenges in your browser. No login required.
+              Real quant interview questions from the Green Book. No login required.
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link href="/problems" className="flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-dark-900 font-bold px-7 py-3.5 rounded-xl transition-all shadow-lg shadow-brand-500/20">
                 Start Solving <ArrowRight size={18} />
-              </Link>
-              <Link href="/research" className="flex items-center gap-2 bg-slate-800/80 backdrop-blur border border-slate-700 hover:border-slate-500 text-slate-200 font-semibold px-7 py-3.5 rounded-xl transition-all">
-                Research Library
               </Link>
             </div>
           </div>
@@ -54,7 +51,7 @@ export default function Home() {
 
         <section className="border-y border-slate-800/60 bg-slate-900/40 backdrop-blur-sm">
           <div className="max-w-3xl mx-auto px-6 py-6 grid grid-cols-3 gap-6">
-            {[["63","Problems"],["9","Categories"],["3","Problem Types"]].map(([v,l]) => (
+            {[["200+","Problems"],["9","Categories"],["2","Problem Types"]].map(([v,l]) => (
               <div key={l} className="text-center">
                 <div className="text-2xl font-black text-brand-400 font-mono">{v}</div>
                 <div className="text-xs text-slate-500 mt-0.5">{l}</div>
@@ -64,9 +61,9 @@ export default function Home() {
         </section>
 
         <section className="max-w-6xl mx-auto px-6 py-20">
-          <h2 className="text-3xl font-bold text-slate-100 mb-3 text-center">8 Problem Categories</h2>
-          <p className="text-slate-400 text-center mb-12">From quant basics to brain teasers from top trading firms</p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <h2 className="text-3xl font-bold text-slate-100 mb-3 text-center">9 Problem Categories</h2>
+          <p className="text-slate-400 text-center mb-12">Every question from the Green Book — the definitive quant interview guide</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {CATEGORIES.map(({ key, label, color, desc }) => (
               <Link key={key} href={`/problems?category=${key}`}
                 className="group relative bg-slate-900/70 backdrop-blur border border-slate-800 hover:border-slate-600 rounded-2xl p-5 transition-all hover:-translate-y-1 overflow-hidden">
@@ -82,11 +79,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6 pb-24 grid md:grid-cols-3 gap-6">
+        <section className="max-w-6xl mx-auto px-6 pb-24 grid md:grid-cols-2 gap-6">
           {[
-            { icon: Code2,    title: "Run in Browser",    desc: "Python runs instantly via Pyodide — no server needed.",               color: "text-blue-400",   bg: "bg-blue-400/10 border-blue-400/20" },
-            { icon: BarChart2, title: "Real Problems",    desc: "Actual quant interview questions from top hedge funds and banks.",     color: "text-green-400",  bg: "bg-green-400/10 border-green-400/20" },
-            { icon: BookOpen, title: "Research Papers",   desc: "Black-Scholes, Markowitz, Kelly — landmark papers with live code.",   color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
+            { icon: BarChart2, title: "Real Interview Problems", desc: "Every question sourced from 'A Practical Guide to Quantitative Finance Interviews' — the definitive Green Book for quant prep.", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
+            { icon: BookOpen,  title: "MCQ + Numerical Answers",  desc: "Pick the right option or type the exact number. Instant feedback with detailed explanations for every question.", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
           ].map(({ icon: Icon, title, desc, color, bg }) => (
             <div key={title} className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bg} border mb-4`}>
