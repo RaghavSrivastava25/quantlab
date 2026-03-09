@@ -6,6 +6,15 @@ import clsx from "clsx";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const link = (href: string, label: string) => (
+    <Link href={href}
+      className={clsx("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+        pathname.startsWith(href)
+          ? "text-brand-400 bg-brand-500/10"
+          : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
+      {label}
+    </Link>
+  );
   return (
     <nav className="sticky top-0 z-50 border-b border-slate-800/60 bg-dark-900/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
@@ -15,13 +24,10 @@ export default function Navbar() {
           </div>
           <span className="font-black text-slate-100 text-lg tracking-tight">QuantLab</span>
         </Link>
-        <Link href="/problems"
-          className={clsx("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-            pathname.startsWith("/problems")
-              ? "text-brand-400 bg-brand-500/10"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800")}>
-          Problems
-        </Link>
+        <div className="flex items-center gap-1">
+          {link("/problems", "Problems")}
+          {link("/firms", "Firms")}
+        </div>
       </div>
     </nav>
   );

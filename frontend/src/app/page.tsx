@@ -39,7 +39,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-              Real quant interview questions from the Green Book. No login required.
+              Real quant interview questions. No login required.
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link href="/problems" className="flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-dark-900 font-bold px-7 py-3.5 rounded-xl transition-all shadow-lg shadow-brand-500/20">
@@ -62,7 +62,7 @@ export default function Home() {
 
         <section className="max-w-6xl mx-auto px-6 py-20">
           <h2 className="text-3xl font-bold text-slate-100 mb-3 text-center">9 Problem Categories</h2>
-          <p className="text-slate-400 text-center mb-12">Every question from the Green Book — the definitive quant interview guide</p>
+          <p className="text-slate-400 text-center mb-12">From quant basics to brain teasers from top trading firms</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {CATEGORIES.map(({ key, label, color, desc }) => (
               <Link key={key} href={`/problems?category=${key}`}
@@ -81,7 +81,7 @@ export default function Home() {
 
         <section className="max-w-6xl mx-auto px-6 pb-24 grid md:grid-cols-2 gap-6">
           {[
-            { icon: BarChart2, title: "Real Interview Problems", desc: "Every question sourced from 'A Practical Guide to Quantitative Finance Interviews' — the definitive Green Book for quant prep.", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
+            { icon: BarChart2, title: "Real Interview Problems", desc: "Problems sourced from quant interviews at top HFTs, hedge funds and banks worldwide.", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
             { icon: BookOpen,  title: "MCQ + Numerical Answers",  desc: "Pick the right option or type the exact number. Instant feedback with detailed explanations for every question.", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
           ].map(({ icon: Icon, title, desc, color, bg }) => (
             <div key={title} className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur">
